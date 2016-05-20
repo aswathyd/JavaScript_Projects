@@ -1,113 +1,68 @@
 "use strict";
 
-////creating object in literal method
-//var cat = {name:"Fluffy",
-//           color:"white",
-//           speak: function(){display("mawooo")}
-//
-//          }
-//
-//
-//display(cat.name);
-//cat.speak();
-//
-////using constructor function to create javascript object
-//
-//function Cat(name,color){
-//    this.name = name,
-//    this.color = color
-//}
-//
-//var cat = new Cat("fluffy","white")
-//
-//display(cat);
-//
-////using object.create() to create javascript object
-//
-//var cat = Object.create(Object.prototype,{
-//                        name:{
-//                              value:"Fluffy",
-//                              enumerable:true,
-//                              writeable:true,
-//                              configurable:true},
-//                        color:{
-//                             value:"White",
-//                               enumerable:true,
-//                               writeable:true,
-//                               configurable:true}
-//                        });
-//display(cat);
-//
-////using ECMAScript 6 class to crate javascript object
-//
-//class Cat {
-//    constructor (name,color){
-//        this.name = name;
-//        this.color = color;
-//    }
-//    speak(){display("meeoow")}
-//}
-//
-//var cat = new Cat("fluffy","white")
-//display(cat);
-//cat.speak();
+var arr =['red','blue','green']
+var arr1 = [1,2,3]
 
-//name property can't change if the writable is false
-//var cat = {name:"Fluffy",
-//           color:"white",
-//          }
-//Object.defineProperty(cat,'name',{writable:false})
-//cat.name ='scrachy'
-//display(Object.getOwnPropertyDescriptor(cat,'name'))
+Object.defineProperty(Array.prototype,'last',{get:function(){
+    return this[this.length-1]
+}})
+ var last = arr.last;
+ var last1 = arr1.last;
+display(last)
+display(last1)
 
-// property is an object in order to make it readable we need to freeze that Object
-
-//var cat = {name: {first:'fluffy',last:'leBoo'},
-//           color:"white",
-//          }
-//Object.defineProperty(cat,'name',{writable:false})
-//Object.freeze(cat.name)
-//cat.name.first ='scrachy'
-//display(cat.name)
-
-//using the Enumerable Attributes
-
-//var cat = { name :{first: 'Flufy', last:'leBow'},
-//            color: 'white'
-//          }
-//make not enumerable(not loop over it)
-//Object.defineProperty(cat,'name',{enumerable:false})
-//make  enumerable( loop over it)
-//Object.defineProperty(cat,'name',{enumerable:true})
-////for(var propertyName in cat)
-////    {
-////        display(propertyName+ ':'+cat[propertyName])
-////    }
-////display(Object.keys(cat));
+function Cat(name, color){
+    this.name = name
+    this.color = color
+}
 //
-////to get all cat Object
-//display(JSON.stringify(cat))
+var fluffy = new Cat('Fluffy','White')
+Cat.prototype.age = 3
+//display(Cat.prototype)
+//display(fluffy._proto_)
 
-//using the configurable attribute
+var muffin = new Cat('Muffine','Brown')
+//display(muffin._proto_)
 
-//using getters and setters
+display(fluffy.age)
+display(muffin.age)
 
-var cat = { name :{first: 'Flufy', last:'leBow'},
-            color: 'white'
-          }
-Object.defineProperty(cat,'fullName',{
-    get: function(){
-            return this.name.first+ ' ' + this.name.last
-                      },
-    //set the first and last name based on the full name
-    set:function(value){
-        var nameParts = value.split(' ')
-        this.name.first = nameParts[0]
-        this.name.last = nameParts[1]
+//creating prototypal inheritance chain
+
+function Animal(voice){
+    this.voice = voice || 'Grunt'
+}
+Animal.prototype.speak = function(){
+    display(this.voice)
+}
+function Cat(name,color){
+    Animal.call(this,'Meow')
+    this.name = name
+    this.color = color
+}
+Cat.prototype = Object.create(Animal.prototype)
+Cat.prototype.constructor = Cat
+var fluffy = new Cat('Fuffy','White')
+display(fluffy)
+fluffy.speak()
+
+//creating prototype using class
+
+class Animal {
+    constructor(voice){
+        this.voice = voice ||'Grunt'
     }
-    
-     })
-cat.fullName = 'Muffin Top'
-display(cat.fullName)
-display(cat.name.first)
-display(cat.name.last)
+    speak(){
+        display(this.voice)
+    }
+}
+class Cat extends Animal {
+    constructor(name, color) {
+        super('Meow')
+        this.name = name
+        this.color= color
+    }
+}
+
+var fluffy = new Cat('Fluffy','White')
+display(fluffy)
